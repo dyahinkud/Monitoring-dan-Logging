@@ -1,0 +1,10 @@
+# Python build
+__pycache__/
+
+# Generated Files
+best*
+simulate*
+Monitoring*
+run*
+*.json
+*dashboard*
