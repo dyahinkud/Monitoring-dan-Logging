@@ -1,18 +1,20 @@
 import time
 import os
-try:
-    import psutil
-except ImportError:
-    psutil = None
+import psutil
 from flask import Flask, request, jsonify
 import mlflow.sklearn
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
-import prometheus_exporter as metrics
+import importlib.util
+
+# Dynamic import for numbered file
+spec = importlib.util.spec_from_file_location("metrics", os.path.join(os.path.dirname(__file__), "3.prometheus_exporter.py"))
+metrics = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(metrics)
 
 app = Flask(__name__)
 
 # Load model
-MODEL_PATH = "best_model_local"
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "Membangun_model", "best_model_local")
 try:
     model = mlflow.sklearn.load_model(MODEL_PATH)
     print(f"Model loaded from {MODEL_PATH}")
